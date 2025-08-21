@@ -4,6 +4,9 @@ import { SurveyProgress } from "./SurveyProgress";
 import { LoginInformation } from "./steps/LoginInformation";
 import { ContactInformation } from "./steps/ContactInformation";
 import { HouseFamilyDetails } from "./steps/HouseFamilyDetails";
+import { AppliancesStep } from "./steps/AppliancesStep";
+import { VehiclesStep } from "./steps/VehiclesStep";
+import { IncomeHealthStep } from "./steps/IncomeHealthStep";
 import { Card } from "@/components/ui/card";
 
 const surveySteps: SurveyStep[] = [
@@ -91,6 +94,30 @@ export const SurveyContainer = ({ onComplete }: SurveyContainerProps) => {
       case 2:
         return (
           <HouseFamilyDetails
+            data={surveyData}
+            onNext={handleStepComplete}
+            onPrevious={handlePrevious}
+          />
+        );
+      case 3:
+        return (
+          <AppliancesStep
+            data={surveyData}
+            onNext={handleStepComplete}
+            onPrevious={handlePrevious}
+          />
+        );
+      case 4:
+        return (
+          <VehiclesStep
+            data={surveyData}
+            onNext={handleStepComplete}
+            onPrevious={handlePrevious}
+          />
+        );
+      case 5:
+        return (
+          <IncomeHealthStep
             data={surveyData}
             onNext={handleStepComplete}
             onPrevious={handlePrevious}
