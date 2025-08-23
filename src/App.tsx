@@ -15,8 +15,12 @@ const queryClient = new QueryClient();
 
 type AppState = 'survey' | 'qr-generated' | 'scanner' | 'login' | 'data-display';
 
-const App = () => {
-  const [currentState, setCurrentState] = useState<AppState>('survey');
+interface AppProps {
+  initialState?: AppState;
+}
+
+const App = ({ initialState = 'survey' }: AppProps) => {
+  const [currentState, setCurrentState] = useState<AppState>(initialState);
   const [surveyData, setSurveyData] = useState<SurveyData | null>(null);
   const [scannedQRData, setScannedQRData] = useState<any>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
