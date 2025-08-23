@@ -25,7 +25,7 @@ const Index = () => {
             alt="Scannest Logo" 
             className="mx-auto mb-6 h-20 w-auto"
           />
-          <h1 className="text-4xl font-bold text-gradient mb-2">Welcome to Scannest</h1>
+          <h1 className="text-4xl font-bold text-gradient mb-2">Welcome to Household Survey 💜</h1>
           <p className="text-lg text-muted-foreground">
             Complete household surveys and manage data with QR authentication
           </p>
@@ -117,7 +117,7 @@ const Index = () => {
               </div>
               <CardTitle className="text-2xl text-gradient">Login Page</CardTitle>
               <CardDescription>
-                Already registered? Login with your ID & Password
+                For authorised access only
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -202,10 +202,13 @@ const Index = () => {
               </div>
               <div className="text-center space-y-2">
                 <p className="text-muted-foreground">
-                  📲 Scan the QR code in the app to open the Login Page directly
+                  📲 Scan the QR code in the app to go to the Login Page
                 </p>
                 <p className="text-muted-foreground">
-                  🔑 Enter your ID & Password to view your submitted information
+                  ✅ If authorised, your information will open directly
+                </p>
+                <p className="text-sm text-muted-foreground font-medium text-destructive">
+                  ⚠️ Non-authorised users will not be able to access this area
                 </p>
               </div>
             </CardContent>
