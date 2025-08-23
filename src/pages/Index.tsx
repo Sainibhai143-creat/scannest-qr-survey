@@ -25,29 +25,26 @@ const Index = () => {
             alt="Scannest Logo" 
             className="mx-auto mb-6 h-20 w-auto"
           />
-          <h1 className="text-4xl font-bold text-gradient mb-2">Welcome to the Household Survey App 💜</h1>
+          <h1 className="text-4xl font-bold text-gradient mb-2">Welcome to Scannest</h1>
           <p className="text-lg text-muted-foreground">
-            🔹 Navigation: Use the buttons at the top to access:
+            Complete household surveys and manage data with QR authentication
           </p>
-          <p className="text-muted-foreground">
-            <strong>Scan</strong> – View data by entering your User ID & Password.
-          </p>
-          <p className="text-muted-foreground">
-            <strong>Registration</strong> – New users can register here with their details.
+          <p className="text-sm text-muted-foreground mt-1">
+            Developed by Setu Developer
           </p>
         </div>
 
-        {/* Two Main Sections */}
-        <div className="max-w-6xl mx-auto grid gap-8 md:grid-cols-2">
-          {/* Scan Section */}
+        {/* Three Main Sections */}
+        <div className="max-w-7xl mx-auto grid gap-8 md:grid-cols-3">
+          {/* Scan / Upload File Section */}
           <Card className="shadow-elegant hover:shadow-glow transition-all duration-300">
             <CardHeader className="text-center">
               <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center mb-4">
                 <Scan className="w-8 h-8 text-primary-foreground" />
               </div>
-              <CardTitle className="text-2xl text-gradient">Scan</CardTitle>
+              <CardTitle className="text-2xl text-gradient">Scan / Upload File</CardTitle>
               <CardDescription>
-                View data by entering your User ID & Password
+                Start by scanning or uploading your document
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -72,18 +69,25 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          {/* Registration Section */}
+          {/* Registration / Home Section */}
           <Card className="shadow-elegant hover:shadow-glow transition-all duration-300">
             <CardHeader className="text-center">
               <div className="mx-auto w-16 h-16 bg-gradient-to-br from-secondary to-secondary-light rounded-full flex items-center justify-center mb-4">
                 <UserPlus className="w-8 h-8 text-secondary-foreground" />
               </div>
-              <CardTitle className="text-2xl text-gradient">Registration</CardTitle>
+              <CardTitle className="text-2xl text-gradient">Registration / Home</CardTitle>
               <CardDescription>
-                New users can register here with their details
+                New user? Register here and fill the form
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm">Registration Rules:</h4>
+                <ul className="text-xs text-muted-foreground space-y-1">
+                  <li>• One email ID can register only once</li>
+                  <li>• Use a valid email ID & contact number</li>
+                </ul>
+              </div>
               <div className="space-y-2">
                 <h4 className="font-semibold text-sm">Survey Includes:</h4>
                 <ul className="text-xs text-muted-foreground space-y-1">
@@ -104,48 +108,104 @@ const Index = () => {
               </Button>
             </CardContent>
           </Card>
-        </div>
 
-        {/* Access Rules */}
-        <div className="mt-12 max-w-4xl mx-auto">
-          <Card className="bg-primary/5 border-primary/20">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-center mb-4">
-                <Shield className="w-8 h-8 text-primary mr-3" />
-                <h3 className="text-xl font-bold text-gradient">🔐 Access Rules</h3>
+          {/* Login Page Section */}
+          <Card className="shadow-elegant hover:shadow-glow transition-all duration-300">
+            <CardHeader className="text-center">
+              <div className="mx-auto w-16 h-16 bg-gradient-to-br from-success to-accent rounded-full flex items-center justify-center mb-4">
+                <LogIn className="w-8 h-8 text-success-foreground" />
               </div>
-              <div className="text-center space-y-2">
-                <p className="text-muted-foreground">
-                  • Every user must log in with a valid ID & Password
-                </p>
-                <p className="text-muted-foreground">
-                  • Each email can register only once
-                </p>
-                <p className="text-muted-foreground">
-                  • After registration, you can later access your data through the Scan Page with the same ID & Password
-                </p>
-                <p className="text-muted-foreground">
-                  • Authorised users also need to enter their credentials
-                </p>
-              </div>
+              <CardTitle className="text-2xl text-gradient">Login Page</CardTitle>
+              <CardDescription>
+                Already registered? Login with your ID & Password
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {!showForgotPassword ? (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="loginId">User ID</Label>
+                    <Input
+                      id="loginId"
+                      placeholder="Enter your User ID"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="loginPassword">Password</Label>
+                    <Input
+                      id="loginPassword"
+                      type="password"
+                      placeholder="Enter your password"
+                    />
+                  </div>
+                  <div className="space-y-3">
+                    <Button className="w-full" variant="outline" size="lg">
+                      Login
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      className="w-full text-sm"
+                      onClick={() => setShowForgotPassword(true)}
+                    >
+                      Forgot Password?
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="text-center mb-4">
+                    <Mail className="w-12 h-12 text-primary mx-auto mb-2" />
+                    <h4 className="font-semibold">Reset Password</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Enter your email to receive password reset instructions
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="resetEmail">Email Address</Label>
+                    <Input
+                      id="resetEmail"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-3">
+                    <Button 
+                      className="w-full" 
+                      size="lg"
+                      onClick={handleForgotPassword}
+                    >
+                      Send Reset Email
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      className="w-full text-sm"
+                      onClick={() => setShowForgotPassword(false)}
+                    >
+                      Back to Login
+                    </Button>
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
         </div>
 
         {/* QR Code Access Information */}
-        <div className="mt-8 max-w-4xl mx-auto">
-          <Card className="bg-secondary/5 border-secondary/20">
+        <div className="mt-12 max-w-4xl mx-auto">
+          <Card className="bg-primary/5 border-primary/20">
             <CardContent className="p-6">
               <div className="flex items-center justify-center mb-4">
-                <QrCode className="w-8 h-8 text-secondary mr-3" />
-                <h3 className="text-xl font-bold text-gradient">📲 QR Code Access</h3>
+                <QrCode className="w-8 h-8 text-primary mr-3" />
+                <h3 className="text-xl font-bold text-gradient">QR Code Access</h3>
               </div>
               <div className="text-center space-y-2">
                 <p className="text-muted-foreground">
-                  • Scanning a QR code will take you to the Scan Page
+                  📲 Scan the QR code in the app to open the Login Page directly
                 </p>
                 <p className="text-muted-foreground">
-                  • Even after scanning, you must enter your ID & Password to view information
+                  🔑 Enter your ID & Password to view your submitted information
                 </p>
               </div>
             </CardContent>
@@ -156,9 +216,13 @@ const Index = () => {
         <div className="mt-8 max-w-4xl mx-auto">
           <Card className="bg-success/5 border-success/20">
             <CardContent className="p-6">
+              <div className="flex items-center justify-center mb-4">
+                <Shield className="w-8 h-8 text-success mr-3" />
+                <h3 className="text-xl font-bold text-success">Data Security</h3>
+              </div>
               <div className="text-center">
                 <p className="text-muted-foreground">
-                  ✨ Your data is secure and used only for survey purposes.
+                  ✨ Your information is safe and used only for survey purposes
                 </p>
               </div>
             </CardContent>

@@ -41,48 +41,21 @@ export const LoginModal = ({ isOpen, qrData, onLogin, onClose }: LoginModalProps
       // Simulate authentication delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Authorized credentials
-      const authorizedUsers = [
-        { id: "ravigopiramsaini1210@gmail.com", password: "ravisaini" },
-        { id: "sainibhai99999@gmail.com", password: "sainibhiravi" }
-      ];
+      // Decode the QR data and verify credentials
+      const surveyData = JSON.parse(atob(qrData.data));
       
-      // Check if credentials match authorized users
-      const isAuthorized = authorizedUsers.some(
-        user => user.id === credentials.id && user.password === credentials.password
-      );
-      
-      if (isAuthorized) {
-        // If QR data exists, verify it matches credentials, otherwise proceed with authorized login
-        if (qrData) {
-          try {
-            const surveyData = JSON.parse(atob(qrData.data));
-            if (credentials.id === surveyData.id && credentials.password === surveyData.password) {
-              toast({
-                title: "QR Access Granted",
-                description: `Welcome back, ${surveyData.name}! Your information is displayed directly.`,
-                variant: "default",
-              });
-              onLogin(credentials);
-              reset();
-              return;
-            }
-          } catch (qrError) {
-            // If QR data is invalid but user is authorized, still allow login
-          }
-        }
-        
+      if (credentials.id === surveyData.id && credentials.password === surveyData.password) {
         toast({
-          title: "Authorized Access Granted",
-          description: "Welcome! You have been granted access to the system.",
+          title: "Login Successful",
+          description: `Welcome back, ${surveyData.name}!`,
           variant: "default",
         });
         onLogin(credentials);
         reset();
       } else {
         toast({
-          title: "Unauthorized Access",
-          description: "Invalid credentials. Only authorized users can access this area.",
+          title: "Authentication Failed",
+          description: "Invalid ID or password. Please try again.",
           variant: "destructive",
         });
       }
@@ -112,10 +85,10 @@ export const LoginModal = ({ isOpen, qrData, onLogin, onClose }: LoginModalProps
             <Lock className="w-8 h-8 text-primary-foreground" />
           </div>
           <DialogTitle className="text-2xl text-center text-gradient">
-            ⚠️ Authorised Access Only ⚠️
+            Authentication Required
           </DialogTitle>
           <DialogDescription className="text-center">
-            This page is restricted to authorised users. Only those with valid credentials can log in and view information.
+            Enter your credentials to access the survey data
           </DialogDescription>
         </DialogHeader>
         
@@ -182,27 +155,13 @@ export const LoginModal = ({ isOpen, qrData, onLogin, onClose }: LoginModalProps
           </div>
         </form>
 
-        <div className="mt-4 space-y-3">
-          <div className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
-            <h4 className="text-sm font-semibold text-center mb-2">✅ Currently Active IDs:</h4>
-            <div className="space-y-1 text-xs text-muted-foreground">
-              <p><strong>ID:</strong> ravigopiramsaini1210@gmail.com</p>
-              <p><strong>Password:</strong> ravisaini</p>
-              <hr className="my-1 border-primary/20" />
-              <p><strong>ID:</strong> sainibhai99999@gmail.com</p>
-              <p><strong>Password:</strong> sainibhiravi</p>
-            </div>
+        {qrData && (
+          <div className="mt-4 p-3 bg-muted rounded-lg">
+            <p className="text-xs text-muted-foreground text-center">
+              QR Code detected for: {qrData.name}
+            </p>
           </div>
-          
-          {qrData && (
-            <div className="p-3 bg-muted rounded-lg">
-              <h4 className="text-sm font-semibold text-center mb-1">📲 Special Access via QR:</h4>
-              <p className="text-xs text-muted-foreground text-center">
-                When scanning via QR code (with authorised ID/Pass), information will be displayed directly without asking credentials again.
-              </p>
-            </div>
-          )}
-        </div>
+        )}
       </DialogContent>
     </Dialog>
   );
