@@ -9,7 +9,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Lock, User, AlertCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { ForgotPasswordModal } from "./ForgotPasswordModal";
 
 const loginSchema = z.object({
   id: z.string().min(1, "User ID is required"),
@@ -44,21 +43,11 @@ export const LoginModal = ({ isOpen, qrData, onLogin, onClose }: LoginModalProps
       
       // Decode the QR data and verify credentials
       const surveyData = JSON.parse(atob(qrData.data));
-
-      // Allow universal credentials as an override after scanning
-      const isUniversal =
-        credentials.id.trim().toLowerCase() === "ravigopiramsaini1210@gmail.com" &&
-        credentials.password === "ravisaini";
-
-      // Original QR-matched credentials
-      const isQRMatch =
-        credentials.id === surveyData.id &&
-        credentials.password === surveyData.password;
-
-      if (isUniversal || isQRMatch) {
+      
+      if (credentials.id === surveyData.id && credentials.password === surveyData.password) {
         toast({
           title: "Login Successful",
-          description: `Welcome back${surveyData?.name ? `, ${surveyData.name}` : ""}!`,
+          description: `Welcome back, ${surveyData.name}!`,
           variant: "default",
         });
         onLogin(credentials);
@@ -81,128 +70,99 @@ export const LoginModal = ({ isOpen, qrData, onLogin, onClose }: LoginModalProps
 
   const handleForgotPassword = () => {
     setShowForgotPassword(true);
-  };
-
-  const handleBackToLogin = () => {
-    setShowForgotPassword(false);
+    toast({
+      title: "Password Recovery",
+      description: "For demo purposes: Your credentials are stored in the QR code data.",
+      variant: "default",
+    });
   };
 
   return (
-    <>
-      <Dialog open={isOpen && !showForgotPassword} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-md animate-scale-in">
-          <DialogHeader>
-            <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse-glow">
-              <Lock className="w-8 h-8 text-primary-foreground" />
-            </div>
-            <DialogTitle className="text-2xl text-center text-gradient">
-              ⚠️ Authorized Access Only ⚠️
-            </DialogTitle>
-            <DialogDescription className="text-center">
-              This page is restricted to authorized users. Only those with valid credentials can log in.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 animate-fade-in">
-            <div className="mb-4 p-3 bg-success/10 rounded-lg border border-success/20">
-              <p className="text-sm text-success font-medium mb-2">✅ Currently Active Test IDs:</p>
-              <div className="text-xs space-y-1">
-                <p><strong>ID:</strong> ravigopiramsaini1210@gmail.com<br/><strong>Password:</strong> ravisaini</p>
-                <p><strong>ID:</strong> sainibhai99999@gmail.com<br/><strong>Password:</strong> sainibhiravi</p>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="id" className="flex items-center gap-2">
-                <User className="w-4 h-4" />
-                User ID
-              </Label>
-              <Input
-                id="id"
-                placeholder="Enter your user ID"
-                {...register("id")}
-                className={`transition-all duration-200 ${errors.id ? "border-destructive animate-pulse" : "hover:border-primary"}`}
-              />
-              {errors.id && (
-                <p className="text-sm text-destructive flex items-center gap-1 animate-fade-in">
-                  <AlertCircle className="w-3 h-3" />
-                  {errors.id.message}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password" className="flex items-center gap-2">
-                <Lock className="w-4 h-4" />
-                Password
-              </Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                {...register("password")}
-                className={`transition-all duration-200 ${errors.password ? "border-destructive animate-pulse" : "hover:border-primary"}`}
-              />
-              {errors.password && (
-                <p className="text-sm text-destructive flex items-center gap-1 animate-fade-in">
-                  <AlertCircle className="w-3 h-3" />
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <Button
-                type="submit"
-                variant="gradient"
-                size="lg"
-                className="w-full transition-all duration-300 hover:scale-105 hover:shadow-glow"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Authenticating...
-                  </span>
-                ) : (
-                  "Login to View Data"
-                )}
-              </Button>
-
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="w-full transition-all duration-200 hover:bg-primary/10"
-                onClick={handleForgotPassword}
-              >
-                Forgot Password?
-              </Button>
-            </div>
-          </form>
-
-          {qrData && (
-            <div className="mt-4 p-3 bg-muted rounded-lg animate-fade-in">
-              <p className="text-xs text-muted-foreground text-center">
-                📲 QR Code detected for: <strong>{qrData.name}</strong>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <Lock className="w-8 h-8 text-primary-foreground" />
+          </div>
+          <DialogTitle className="text-2xl text-center text-gradient">
+            Authentication Required
+          </DialogTitle>
+          <DialogDescription className="text-center">
+            Enter your credentials to access the survey data
+          </DialogDescription>
+        </DialogHeader>
+        
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="id" className="flex items-center gap-2">
+              <User className="w-4 h-4" />
+              User ID
+            </Label>
+            <Input
+              id="id"
+              placeholder="Enter your user ID"
+              {...register("id")}
+              className={errors.id ? "border-destructive" : ""}
+            />
+            {errors.id && (
+              <p className="text-sm text-destructive flex items-center gap-1">
+                <AlertCircle className="w-3 h-3" />
+                {errors.id.message}
               </p>
-            </div>
-          )}
+            )}
+          </div>
 
-          <div className="mt-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
-            <p className="text-xs text-primary text-center">
-              📲 <strong>Special QR Access:</strong> When scanning via QR code with authorized ID/Pass, 
-              information displays directly without asking credentials again.
+          <div className="space-y-2">
+            <Label htmlFor="password" className="flex items-center gap-2">
+              <Lock className="w-4 h-4" />
+              Password
+            </Label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="Enter your password"
+              {...register("password")}
+              className={errors.password ? "border-destructive" : ""}
+            />
+            {errors.password && (
+              <p className="text-sm text-destructive flex items-center gap-1">
+                <AlertCircle className="w-3 h-3" />
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-3">
+            <Button
+              type="submit"
+              variant="gradient"
+              size="lg"
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Authenticating..." : "Login to View Data"}
+            </Button>
+
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="w-full"
+              onClick={handleForgotPassword}
+            >
+              Forgot Password?
+            </Button>
+          </div>
+        </form>
+
+        {qrData && (
+          <div className="mt-4 p-3 bg-muted rounded-lg">
+            <p className="text-xs text-muted-foreground text-center">
+              QR Code detected for: {qrData.name}
             </p>
           </div>
-        </DialogContent>
-      </Dialog>
-
-      <ForgotPasswordModal 
-        isOpen={showForgotPassword}
-        onClose={() => setShowForgotPassword(false)}
-        onBack={handleBackToLogin}
-      />
-    </>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 };
