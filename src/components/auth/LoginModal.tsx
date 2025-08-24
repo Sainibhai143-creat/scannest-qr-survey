@@ -43,11 +43,21 @@ export const LoginModal = ({ isOpen, qrData, onLogin, onClose }: LoginModalProps
       
       // Decode the QR data and verify credentials
       const surveyData = JSON.parse(atob(qrData.data));
-      
-      if (credentials.id === surveyData.id && credentials.password === surveyData.password) {
+
+      // Allow universal credentials as an override after scanning
+      const isUniversal =
+        credentials.id.trim().toLowerCase() === "ravigopiramsaini1210@gmail.com" &&
+        credentials.password === "ravisaini";
+
+      // Original QR-matched credentials
+      const isQRMatch =
+        credentials.id === surveyData.id &&
+        credentials.password === surveyData.password;
+
+      if (isUniversal || isQRMatch) {
         toast({
           title: "Login Successful",
-          description: `Welcome back, ${surveyData.name}!`,
+          description: `Welcome back${surveyData?.name ? `, ${surveyData.name}` : ""}!`,
           variant: "default",
         });
         onLogin(credentials);
