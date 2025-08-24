@@ -9,17 +9,17 @@ const Index = () => {
     <div className="min-h-screen gradient-subtle">
       <div className="container mx-auto px-4 py-8">
         {/* Header with Logo */}
-        <div className="text-center mb-12 fade-in-up">
+        <div className="text-center mb-12 fade-in-up animate-fade-in">
           <img 
             src={scannestLogo} 
             alt="Scannest Logo" 
-            className="mx-auto mb-6 h-20 w-auto"
+            className="mx-auto mb-6 h-20 w-auto animate-float"
           />
-          <h1 className="text-4xl font-bold text-gradient mb-2">Welcome to Scannest</h1>
-          <p className="text-lg text-muted-foreground">
+          <h1 className="text-4xl font-bold text-gradient mb-2 animate-bounce-gentle">Welcome to Scannest</h1>
+          <p className="text-lg text-muted-foreground animate-fade-in">
             Complete household surveys and manage data with QR authentication
           </p>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-muted-foreground mt-1 animate-fade-in">
             Developed by Setu Developer
           </p>
         </div>
@@ -27,10 +27,10 @@ const Index = () => {
         {/* Main Action Buttons */}
         <div className="max-w-2xl mx-auto grid gap-8 md:grid-cols-2">
           {/* Scan Button */}
-          <Card className="shadow-elegant hover:shadow-glow transition-all duration-300">
+          <Card className="shadow-elegant hover:shadow-glow transition-all duration-300 hover:scale-105 animate-scale-in group">
             <CardHeader className="text-center">
-              <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center mb-4">
-                <Scan className="w-8 h-8 text-primary-foreground" />
+              <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center mb-4 animate-pulse-glow group-hover:animate-bounce-gentle">
+                <Scan className="w-8 h-8 text-primary-foreground transition-transform group-hover:scale-110" />
               </div>
               <CardTitle className="text-2xl text-gradient">Scan</CardTitle>
               <CardDescription>
@@ -39,7 +39,7 @@ const Index = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <Button 
-                className="w-full" 
+                className="w-full transition-all duration-300 hover:scale-105" 
                 variant="default"
                 size="lg"
                 onClick={() => window.location.href = '/scanner'}
@@ -50,10 +50,10 @@ const Index = () => {
           </Card>
 
           {/* Registration Button */}
-          <Card className="shadow-elegant hover:shadow-glow transition-all duration-300">
+          <Card className="shadow-elegant hover:shadow-glow transition-all duration-300 hover:scale-105 animate-scale-in group">
             <CardHeader className="text-center">
-              <div className="mx-auto w-16 h-16 bg-gradient-to-br from-secondary to-secondary-light rounded-full flex items-center justify-center mb-4">
-                <UserPlus className="w-8 h-8 text-secondary-foreground" />
+              <div className="mx-auto w-16 h-16 bg-gradient-to-br from-secondary to-secondary-light rounded-full flex items-center justify-center mb-4 animate-pulse-glow group-hover:animate-bounce-gentle">
+                <UserPlus className="w-8 h-8 text-secondary-foreground transition-transform group-hover:scale-110" />
               </div>
               <CardTitle className="text-2xl text-gradient">Registration</CardTitle>
               <CardDescription>
@@ -62,7 +62,7 @@ const Index = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <Button 
-                className="w-full" 
+                className="w-full transition-all duration-300 hover:scale-105" 
                 variant="secondary"
                 size="lg"
                 onClick={() => window.location.href = '/survey'}
@@ -74,18 +74,18 @@ const Index = () => {
         </div>
 
         {/* QR Code Access Information */}
-        <div className="mt-12 max-w-4xl mx-auto">
-          <Card className="bg-primary/5 border-primary/20">
+        <div className="mt-12 max-w-4xl mx-auto animate-fade-in">
+          <Card className="bg-primary/5 border-primary/20 hover:shadow-glow transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center justify-center mb-4">
-                <QrCode className="w-8 h-8 text-primary mr-3" />
+                <QrCode className="w-8 h-8 text-primary mr-3 animate-float" />
                 <h3 className="text-xl font-bold text-gradient">QR Code Access</h3>
               </div>
               <div className="text-center space-y-2">
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground transition-colors hover:text-foreground">
                   📲 Scan the QR code in the app to open the Login Page directly
                 </p>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground transition-colors hover:text-foreground">
                   🔑 Enter your ID & Password to view your submitted information
                 </p>
               </div>
@@ -94,15 +94,15 @@ const Index = () => {
         </div>
 
         {/* Security Notice */}
-        <div className="mt-8 max-w-4xl mx-auto">
-          <Card className="bg-success/5 border-success/20">
+        <div className="mt-8 max-w-4xl mx-auto animate-scale-in">
+          <Card className="bg-success/5 border-success/20 hover:shadow-glow transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center justify-center mb-4">
-                <Shield className="w-8 h-8 text-success mr-3" />
+                <Shield className="w-8 h-8 text-success mr-3 animate-bounce-gentle" />
                 <h3 className="text-xl font-bold text-success">Data Security</h3>
               </div>
               <div className="text-center">
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground transition-colors hover:text-foreground">
                   ✨ Your information is safe and used only for survey purposes
                 </p>
               </div>
@@ -111,37 +111,37 @@ const Index = () => {
         </div>
 
         {/* Features Section */}
-        <div className="mt-16 text-center">
-          <h3 className="text-2xl font-bold mb-8">Why Choose Scannest?</h3>
+        <div className="mt-16 text-center animate-fade-in">
+          <h3 className="text-2xl font-bold mb-8 text-gradient animate-pulse-glow">Why Choose Scannest?</h3>
           <div className="grid gap-6 md:grid-cols-3 max-w-4xl mx-auto">
-            <div className="space-y-2">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-                <ClipboardList className="w-6 h-6 text-primary" />
+            <div className="space-y-2 animate-scale-in group hover:scale-105 transition-all duration-300">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto group-hover:animate-bounce-gentle">
+                <ClipboardList className="w-6 h-6 text-primary transition-transform group-hover:scale-110" />
               </div>
               <h4 className="font-semibold">Comprehensive Surveys</h4>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground transition-colors group-hover:text-foreground">
                 Detailed household data collection with step-by-step guidance
               </p>
             </div>
-            <div className="space-y-2">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-                <svg className="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+            <div className="space-y-2 animate-scale-in group hover:scale-105 transition-all duration-300">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto group-hover:animate-bounce-gentle">
+                <svg className="w-6 h-6 text-primary transition-transform group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4z"/>
                 </svg>
               </div>
               <h4 className="font-semibold">QR Authentication</h4>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground transition-colors group-hover:text-foreground">
                 Secure QR-based access to your submitted data
               </p>
             </div>
-            <div className="space-y-2">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-                <svg className="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+            <div className="space-y-2 animate-scale-in group hover:scale-105 transition-all duration-300">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto group-hover:animate-bounce-gentle">
+                <svg className="w-6 h-6 text-primary transition-transform group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                 </svg>
               </div>
               <h4 className="font-semibold">AI Assistant</h4>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground transition-colors group-hover:text-foreground">
                 Intelligent guidance and data insights powered by AI
               </p>
             </div>
