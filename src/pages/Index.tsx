@@ -22,6 +22,9 @@ const Index = () => {
           <p className="text-sm text-muted-foreground mt-1">
             Developed by Setu Developer
           </p>
+          <div className="mt-4 flex items-center justify-center">
+            <Button variant="outline" onClick={() => (window.location.href = '/auth')}>Login / Sign up</Button>
+          </div>
         </div>
 
         {/* Main Action Buttons */}
