@@ -1,13 +1,125 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ClipboardList, Scan, QrCode, Shield, UserPlus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ClipboardList, Scan, QrCode, Shield, UserPlus, User, Database } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import scannestLogo from "@/assets/scannest-logo.png";
 
 const Index = () => {
+  const [user, setUser] = useState<any>(null);
+  const [session, setSession] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
+  const [dbStatus, setDbStatus] = useState<string>("");
+
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        // Fetch profile when user logs in
+        if (session?.user) {
+          setTimeout(() => {
+            fetchProfile(session.user.id);
+          }, 0);
+        } else {
+          setProfile(null);
+        }
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const fetchProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+      
+      if (error) {
+        setDbStatus(`Profile fetch error: ${error.message}`);
+      } else {
+        setProfile(data);
+        setDbStatus("Database connected successfully!");
+      }
+    } catch (err) {
+      setDbStatus(`Profile fetch failed: ${err}`);
+    }
+  };
+
+  const testDatabase = async () => {
+    setDbStatus("Testing database...");
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id', { count: 'exact' })
+        .limit(1);
+      
+      if (error) {
+        setDbStatus(`DB Error: ${error.message}`);
+      } else {
+        setDbStatus(`Database OK! Found ${data?.length || 0} profile(s)`);
+      }
+    } catch (err) {
+      setDbStatus(`DB Test Failed: ${err}`);
+    }
+  };
+
   return (
     <div className="min-h-screen gradient-subtle">
       <div className="container mx-auto px-4 py-8">
+        {/* Auth Status Bar */}
+        {user && (
+          <div className="mb-8 max-w-4xl mx-auto">
+            <Card className="bg-success/5 border-success/20">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <User className="w-5 h-5 text-success" />
+                    <div>
+                      <p className="font-medium text-success">Logged in as {user.email}</p>
+                      {profile && (
+                        <p className="text-sm text-muted-foreground">
+                          Profile created: {new Date(profile.created_at).toLocaleDateString()}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Badge variant="secondary" className="bg-success/20 text-success">
+                      <Database className="w-3 h-3 mr-1" />
+                      Connected
+                    </Badge>
+                    <Button variant="outline" size="sm" onClick={testDatabase}>
+                      Test DB
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => supabase.auth.signOut()}>
+                      Logout
+                    </Button>
+                  </div>
+                </div>
+                {dbStatus && (
+                  <p className="text-sm text-muted-foreground mt-2">{dbStatus}</p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Header with Logo */}
         <div className="text-center mb-12 fade-in-up">
           <img 
@@ -22,8 +134,16 @@ const Index = () => {
           <p className="text-sm text-muted-foreground mt-1">
             Developed by Setu Developer
           </p>
-          <div className="mt-4 flex items-center justify-center">
-            <Button variant="outline" onClick={() => (window.location.href = '/auth')}>Login / Sign up</Button>
+          <div className="mt-4 flex items-center justify-center space-x-2">
+            {!user ? (
+              <Button variant="outline" onClick={() => (window.location.href = '/auth')}>
+                Login / Sign up
+              </Button>
+            ) : (
+              <Button variant="outline" onClick={testDatabase}>
+                Test Database Connection
+              </Button>
+            )}
           </div>
         </div>
 
