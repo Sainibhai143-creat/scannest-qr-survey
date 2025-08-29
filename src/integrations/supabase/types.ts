@@ -14,7 +14,228 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      appliances: {
+        Row: {
+          ac: number
+          fans: number
+          geyser: number
+          id: string
+          lights: number
+          microwave: number
+          others: string[]
+          refrigerator: number
+          survey_id: string
+          washing_machine: number
+        }
+        Insert: {
+          ac?: number
+          fans?: number
+          geyser?: number
+          id?: string
+          lights?: number
+          microwave?: number
+          others?: string[]
+          refrigerator?: number
+          survey_id: string
+          washing_machine?: number
+        }
+        Update: {
+          ac?: number
+          fans?: number
+          geyser?: number
+          id?: string
+          lights?: number
+          microwave?: number
+          others?: string[]
+          refrigerator?: number
+          survey_id?: string
+          washing_machine?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appliances_survey_id_fkey"
+            columns: ["survey_id"]
+            isOneToOne: false
+            referencedRelation: "surveys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      qr_tokens: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          survey_id: string
+          token: string
+          used_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          survey_id: string
+          token: string
+          used_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          survey_id?: string
+          token?: string
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qr_tokens_survey_id_fkey"
+            columns: ["survey_id"]
+            isOneToOne: false
+            referencedRelation: "surveys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      surveys: {
+        Row: {
+          address: string
+          created_at: string
+          created_by: string
+          disability_details: string | null
+          family_female: number
+          family_male: number
+          family_total: number
+          full_name: string
+          gov_department: string | null
+          gov_designation: string | null
+          gov_employee_id: string | null
+          has_disability: boolean
+          has_health_insurance: boolean
+          health_insurance_provider: string | null
+          house_number: string
+          id: string
+          income_source: Database["public"]["Enums"]["income_source"]
+          login_email: string
+          login_id: string
+          login_name: string
+          login_password: string
+          ownership: Database["public"]["Enums"]["ownership_type"]
+          phone_number: string
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          created_by: string
+          disability_details?: string | null
+          family_female?: number
+          family_male?: number
+          family_total?: number
+          full_name: string
+          gov_department?: string | null
+          gov_designation?: string | null
+          gov_employee_id?: string | null
+          has_disability?: boolean
+          has_health_insurance?: boolean
+          health_insurance_provider?: string | null
+          house_number: string
+          id?: string
+          income_source: Database["public"]["Enums"]["income_source"]
+          login_email: string
+          login_id: string
+          login_name: string
+          login_password: string
+          ownership: Database["public"]["Enums"]["ownership_type"]
+          phone_number: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          created_by?: string
+          disability_details?: string | null
+          family_female?: number
+          family_male?: number
+          family_total?: number
+          full_name?: string
+          gov_department?: string | null
+          gov_designation?: string | null
+          gov_employee_id?: string | null
+          has_disability?: boolean
+          has_health_insurance?: boolean
+          health_insurance_provider?: string | null
+          house_number?: string
+          id?: string
+          income_source?: Database["public"]["Enums"]["income_source"]
+          login_email?: string
+          login_id?: string
+          login_name?: string
+          login_password?: string
+          ownership?: Database["public"]["Enums"]["ownership_type"]
+          phone_number?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      vehicles: {
+        Row: {
+          fuel_type: Database["public"]["Enums"]["fuel_type"]
+          id: string
+          model_year: number
+          registration_number: string
+          survey_id: string
+          type: string
+        }
+        Insert: {
+          fuel_type: Database["public"]["Enums"]["fuel_type"]
+          id?: string
+          model_year: number
+          registration_number: string
+          survey_id: string
+          type: string
+        }
+        Update: {
+          fuel_type?: Database["public"]["Enums"]["fuel_type"]
+          id?: string
+          model_year?: number
+          registration_number?: string
+          survey_id?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicles_survey_id_fkey"
+            columns: ["survey_id"]
+            isOneToOne: false
+            referencedRelation: "surveys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +244,9 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      fuel_type: "petrol" | "diesel" | "electric" | "cng"
+      income_source: "business" | "privateJob" | "governmentJob"
+      ownership_type: "owner" | "resident"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +373,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      fuel_type: ["petrol", "diesel", "electric", "cng"],
+      income_source: ["business", "privateJob", "governmentJob"],
+      ownership_type: ["owner", "resident"],
+    },
   },
 } as const
