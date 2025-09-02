@@ -56,6 +56,21 @@ const Auth: React.FC = () => {
     setStatus("Logged out.");
   };
 
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setStatus("Please enter your email address first.");
+      return;
+    }
+    setLoading(true);
+    setStatus("");
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: redirectUrl,
+    });
+    setLoading(false);
+    if (error) return setStatus(error.message);
+    setStatus("Password reset email sent. Check your inbox.");
+  };
+
   const testDb = async () => {
     setStatus("Testing database connection...");
     const { data, error } = await (supabase as any)
@@ -109,6 +124,12 @@ const Auth: React.FC = () => {
             )}
             <Button variant="secondary" onClick={() => setMode(mode === "login" ? "signup" : "login")}>{mode === "login" ? "Need an account?" : "Have an account?"}</Button>
           </div>
+
+          {mode === "login" && (
+            <Button variant="ghost" onClick={handleForgotPassword} disabled={loading} className="w-full text-sm">
+              Forgot Password?
+            </Button>
+          )}
 
           <div className="flex gap-2">
             <Button variant="outline" className="flex-1" onClick={() => navigate("/")}>Back Home</Button>
