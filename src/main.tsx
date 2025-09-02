@@ -4,11 +4,21 @@ import App from './App.tsx'
 import Index from "./pages/Index.tsx";
 import { QRScanner } from "./components/qr/QRScanner";
 import Auth from './pages/Auth.tsx'
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import './index.css'
 
 // Create wrapper components for different states
-const SurveyApp = () => <App initialState="survey" />;
-const ScannerApp = () => <App initialState="scanner" />;
+const SurveyApp = () => (
+  <ProtectedRoute>
+    <App initialState="survey" />
+  </ProtectedRoute>
+);
+
+const ScannerApp = () => (
+  <ProtectedRoute>
+    <App initialState="scanner" />
+  </ProtectedRoute>
+);
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>

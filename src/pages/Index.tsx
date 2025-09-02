@@ -136,65 +136,86 @@ const Index = () => {
           </p>
           <div className="mt-4 flex items-center justify-center space-x-2">
             {!user ? (
-              <Button variant="outline" onClick={() => (window.location.href = '/auth')}>
-                Login / Sign up
-              </Button>
+              <Badge variant="secondary" className="bg-primary/10 text-primary">
+                Login required for access
+              </Badge>
             ) : (
-              <Button variant="outline" onClick={testDatabase}>
-                Test Database Connection
-              </Button>
+              <Badge variant="secondary" className="bg-success/20 text-success">
+                <User className="w-3 h-3 mr-1" />
+                Ready to use
+              </Badge>
             )}
           </div>
         </div>
 
-        {/* Main Action Buttons */}
-        <div className="max-w-2xl mx-auto grid gap-8 md:grid-cols-2">
-          {/* Scan Button */}
-          <Card className="shadow-elegant hover:shadow-glow transition-all duration-300">
-            <CardHeader className="text-center">
-              <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center mb-4">
-                <Scan className="w-8 h-8 text-primary-foreground" />
-              </div>
-              <CardTitle className="text-2xl text-gradient">Scan</CardTitle>
-              <CardDescription>
-                View data by entering your User ID & Password
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Button 
-                className="w-full" 
-                variant="default"
-                size="lg"
-                onClick={() => window.location.href = '/scanner'}
-              >
-                Go to Scan Page
-              </Button>
-            </CardContent>
-          </Card>
+        {/* Authentication Required Notice */}
+        {!user && (
+          <div className="max-w-2xl mx-auto mb-8">
+            <Card className="bg-primary/5 border-primary/20">
+              <CardContent className="p-6 text-center">
+                <Shield className="w-12 h-12 text-primary mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gradient mb-2">Authentication Required</h3>
+                <p className="text-muted-foreground mb-4">
+                  Please login or create an account to access survey registration and data scanning features.
+                </p>
+                <Button onClick={() => window.location.href = '/auth'} size="lg">
+                  Login / Sign Up to Continue
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
-          {/* Registration Button */}
-          <Card className="shadow-elegant hover:shadow-glow transition-all duration-300">
-            <CardHeader className="text-center">
-              <div className="mx-auto w-16 h-16 bg-gradient-to-br from-secondary to-secondary-light rounded-full flex items-center justify-center mb-4">
-                <UserPlus className="w-8 h-8 text-secondary-foreground" />
-              </div>
-              <CardTitle className="text-2xl text-gradient">Registration</CardTitle>
-              <CardDescription>
-                New users can register here with their details
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Button 
-                className="w-full" 
-                variant="secondary"
-                size="lg"
-                onClick={() => window.location.href = '/survey'}
-              >
-                Register Now
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Main Action Buttons - Only show if user is authenticated */}
+        {user && (
+          <div className="max-w-2xl mx-auto grid gap-8 md:grid-cols-2">
+            {/* Scan Button */}
+            <Card className="shadow-elegant hover:shadow-glow transition-all duration-300">
+              <CardHeader className="text-center">
+                <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center mb-4">
+                  <Scan className="w-8 h-8 text-primary-foreground" />
+                </div>
+                <CardTitle className="text-2xl text-gradient">Scan</CardTitle>
+                <CardDescription>
+                  View data by entering your User ID & Password
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Button 
+                  className="w-full" 
+                  variant="default"
+                  size="lg"
+                  onClick={() => window.location.href = '/scanner'}
+                >
+                  Go to Scan Page
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Registration Button */}
+            <Card className="shadow-elegant hover:shadow-glow transition-all duration-300">
+              <CardHeader className="text-center">
+                <div className="mx-auto w-16 h-16 bg-gradient-to-br from-secondary to-secondary-light rounded-full flex items-center justify-center mb-4">
+                  <UserPlus className="w-8 h-8 text-secondary-foreground" />
+                </div>
+                <CardTitle className="text-2xl text-gradient">Registration</CardTitle>
+                <CardDescription>
+                  New users can register here with their details
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Button 
+                  className="w-full" 
+                  variant="secondary"
+                  size="lg"
+                  onClick={() => window.location.href = '/survey'}
+                >
+                  Register Now
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* QR Code Access Information */}
         <div className="mt-12 max-w-4xl mx-auto">

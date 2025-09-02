@@ -73,9 +73,10 @@ const Auth: React.FC = () => {
 
   useEffect(() => {
     if (isAuthed) {
-      // Optional: navigate to a protected area later
+      // Redirect authenticated users to home page
+      navigate("/");
     }
-  }, [isAuthed]);
+  }, [isAuthed, navigate]);
 
   return (
     <div className="min-h-screen gradient-subtle flex items-center justify-center px-4">
