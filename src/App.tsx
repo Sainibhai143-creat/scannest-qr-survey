@@ -10,6 +10,8 @@ import { LoginModal } from "@/components/auth/LoginModal";
 import { SurveyDataDisplay } from "@/components/data/SurveyDataDisplay";
 import { AIAssistant } from "@/components/ai/AIAssistant";
 import { SurveyData } from "@/types/survey";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 
 const queryClient = new QueryClient();
 
@@ -25,9 +27,101 @@ const App = ({ initialState = 'survey' }: AppProps) => {
   const [scannedQRData, setScannedQRData] = useState<any>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  const handleSurveyComplete = (data: SurveyData) => {
-    setSurveyData(data);
-    setCurrentState('qr-generated');
+  const handleSurveyComplete = async (data: SurveyData) => {
+    try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Authentication Required",
+          description: "Please login to save survey data",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Save survey data to database
+      const { data: survey, error: surveyError } = await supabase
+        .from('surveys')
+        .insert({
+          created_by: user.id,
+          login_name: data.name,
+          login_email: data.email,
+          login_id: data.id,
+          login_password: data.password,
+          full_name: data.fullName,
+          phone_number: data.phoneNumber,
+          address: data.address,
+          house_number: data.houseNumber,
+          ownership: data.ownership,
+          family_male: data.familyMembers.male,
+          family_female: data.familyMembers.female,
+          family_total: data.familyMembers.total,
+          income_source: data.incomeSource,
+          gov_department: data.governmentJobDetails?.department,
+          gov_designation: data.governmentJobDetails?.designation,
+          gov_employee_id: data.governmentJobDetails?.employeeId,
+          has_disability: data.hasDisability,
+          disability_details: data.disabilityDetails,
+          has_health_insurance: data.hasHealthInsurance,
+          health_insurance_provider: data.healthInsuranceProvider
+        })
+        .select()
+        .single();
+
+      if (surveyError) throw surveyError;
+
+      // Save appliances data
+      const { error: appliancesError } = await supabase
+        .from('appliances')
+        .insert({
+          survey_id: survey.id,
+          fans: data.appliances.fans,
+          lights: data.appliances.lights,
+          ac: data.appliances.ac,
+          refrigerator: data.appliances.refrigerator,
+          washing_machine: data.appliances.washingMachine,
+          geyser: data.appliances.geyser,
+          microwave: data.appliances.microwave,
+          others: data.appliances.others
+        });
+
+      if (appliancesError) throw appliancesError;
+
+      // Save vehicles data
+      if (data.vehicles && data.vehicles.length > 0) {
+        const { error: vehiclesError } = await supabase
+          .from('vehicles')
+          .insert(
+            data.vehicles.map(vehicle => ({
+              survey_id: survey.id,
+              type: vehicle.type,
+              registration_number: vehicle.registrationNumber,
+              fuel_type: vehicle.fuelType,
+              model_year: vehicle.modelYear
+            }))
+          );
+
+        if (vehiclesError) throw vehiclesError;
+      }
+
+      setSurveyData(data);
+      setCurrentState('qr-generated');
+      
+      toast({
+        title: "Survey Saved",
+        description: "Your survey data has been successfully saved!"
+      });
+
+    } catch (error: any) {
+      console.error('Error saving survey:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to save survey data",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleQRGenerated = () => {
