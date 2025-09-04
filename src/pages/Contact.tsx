@@ -33,7 +33,7 @@ const Contact = () => {
     try {
       // Save contact form submission to database
       const { error } = await supabase
-        .from('contact_submissions')
+        .from('contact_submissions' as any)
         .insert([
           {
             name: formData.name,
@@ -212,8 +212,8 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold">Email</h4>
-                    <p className="text-muted-foreground">support@scannest.com</p>
-                    <p className="text-muted-foreground">info@scannest.com</p>
+                    <p className="text-muted-foreground">ravigopiramsaini1219@gmail.com</p>
+                    <p className="text-muted-foreground">theemcollage2@gmail.com</p>
                   </div>
                 </div>
 
