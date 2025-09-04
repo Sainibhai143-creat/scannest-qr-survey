@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from './App.tsx'
 import Index from "./pages/Index.tsx";
+import Contact from "./pages/Contact.tsx";
 import { QRScanner } from "./components/qr/QRScanner";
 import Auth from './pages/Auth.tsx'
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
@@ -24,6 +25,7 @@ createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<Index />} />
+      <Route path="/contact" element={<Contact />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/survey" element={<SurveyApp />} />
       <Route path="/scanner" element={<ScannerApp />} />
