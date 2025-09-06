@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Mail, Phone, MapPin, MessageCircle, Send, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import scannestLogo from "@/assets/scannest-logo.png";
+import scannestLogo from "@/assets/scannest-logo-neon.png";
 
 const Contact = () => {
   const [formData, setFormData] = useState({

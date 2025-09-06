@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ClipboardList, Scan, QrCode, Shield, UserPlus, User, Database } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import scannestLogo from "@/assets/scannest-logo.png";
+import scannestLogo from "@/assets/scannest-logo-neon.png";
 
 const Index = () => {
   const [user, setUser] = useState<any>(null);
