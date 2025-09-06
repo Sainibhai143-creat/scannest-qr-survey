@@ -15,42 +15,42 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    /* Teal-based primary colors for trust and professionalism */
-    --primary: 176 100% 39%;
+    /* Bright teal-based primary colors */
+    --primary: 176 100% 50%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 176 76% 50%;
-    --primary-dark: 176 100% 32%;
+    --primary-light: 176 100% 65%;
+    --primary-dark: 176 100% 42%;
 
-    /* Blue secondary colors */
-    --secondary: 217 91% 60%;
+    /* Bright blue secondary colors */
+    --secondary: 217 100% 70%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-light: 217 91% 70%;
+    --secondary-light: 217 100% 80%;
 
-    /* Success green */
-    --success: 142 76% 36%;
+    /* Bright success green */
+    --success: 142 85% 45%;
     --success-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 210 60% 94%;
+    --muted-foreground: 215 25% 35%;
 
-    --accent: 176 38% 90%;
-    --accent-foreground: 176 100% 32%;
+    --accent: 176 70% 85%;
+    --accent-foreground: 176 100% 25%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 176 100% 39%;
+    --ring: 176 100% 50%;
 
-    /* Custom gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(176 100% 39%), hsl(217 91% 60%));
-    --gradient-secondary: linear-gradient(135deg, hsl(176 76% 50%), hsl(176 100% 32%));
-    --gradient-subtle: linear-gradient(180deg, hsl(210 20% 98%), hsl(176 38% 95%));
+    /* Bright custom gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(176 100% 50%), hsl(217 100% 70%));
+    --gradient-secondary: linear-gradient(135deg, hsl(176 100% 65%), hsl(176 100% 42%));
+    --gradient-subtle: linear-gradient(180deg, hsl(210 20% 98%), hsl(176 70% 90%));
 
-    /* Shadows with teal glow */
-    --shadow-elegant: 0 10px 30px -10px hsl(176 100% 39% / 0.3);
-    --shadow-glow: 0 0 40px hsl(176 76% 50% / 0.4);
+    /* Bright shadows with teal glow */
+    --shadow-elegant: 0 10px 30px -10px hsl(176 100% 50% / 0.4);
+    --shadow-glow: 0 0 40px hsl(176 100% 65% / 0.6);
 
     --radius: 0.75rem;
 
@@ -81,39 +81,39 @@
     --popover: 176 25% 10%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 176 76% 50%;
+    --primary: 176 100% 60%;
     --primary-foreground: 176 25% 8%;
-    --primary-light: 176 76% 60%;
-    --primary-dark: 176 76% 40%;
+    --primary-light: 176 100% 70%;
+    --primary-dark: 176 100% 50%;
 
-    --secondary: 217 91% 70%;
+    --secondary: 217 100% 75%;
     --secondary-foreground: 176 25% 8%;
-    --secondary-light: 217 91% 80%;
+    --secondary-light: 217 100% 85%;
 
-    --success: 142 76% 46%;
+    --success: 142 90% 55%;
     --success-foreground: 176 25% 8%;
 
-    --muted: 176 15% 15%;
-    --muted-foreground: 176 10% 65%;
+    --muted: 176 20% 18%;
+    --muted-foreground: 176 15% 70%;
 
-    --accent: 176 25% 15%;
-    --accent-foreground: 176 76% 50%;
+    --accent: 176 40% 20%;
+    --accent-foreground: 176 100% 60%;
 
     --destructive: 0 84% 70%;
     --destructive-foreground: 176 25% 8%;
 
     --border: 176 15% 20%;
     --input: 176 15% 20%;
-    --ring: 176 76% 50%;
+    --ring: 176 100% 60%;
 
-    /* Dark mode gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(176 76% 50%), hsl(217 91% 70%));
-    --gradient-secondary: linear-gradient(135deg, hsl(176 76% 60%), hsl(176 76% 40%));
-    --gradient-subtle: linear-gradient(180deg, hsl(176 25% 8%), hsl(176 25% 12%));
+    /* Bright dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(176 100% 60%), hsl(217 100% 75%));
+    --gradient-secondary: linear-gradient(135deg, hsl(176 100% 70%), hsl(176 100% 50%));
+    --gradient-subtle: linear-gradient(180deg, hsl(176 25% 8%), hsl(176 40% 15%));
 
-    /* Dark mode shadows */
-    --shadow-elegant: 0 10px 30px -10px hsl(176 76% 50% / 0.4);
-    --shadow-glow: 0 0 40px hsl(176 76% 60% / 0.5);
+    /* Bright dark mode shadows */
+    --shadow-elegant: 0 10px 30px -10px hsl(176 100% 60% / 0.5);
+    --shadow-glow: 0 0 40px hsl(176 100% 70% / 0.6);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
