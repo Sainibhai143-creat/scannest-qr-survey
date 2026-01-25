@@ -48,13 +48,15 @@ const Index = () => {
         .from('profiles')
         .select('*')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
       
       if (error) {
         setDbStatus(`Profile fetch error: ${error.message}`);
-      } else {
+      } else if (data) {
         setProfile(data);
         setDbStatus("Database connected successfully!");
+      } else {
+        setDbStatus("No profile found - will be created on first survey");
       }
     } catch (err) {
       setDbStatus(`Profile fetch failed: ${err}`);
@@ -64,15 +66,14 @@ const Index = () => {
   const testDatabase = async () => {
     setDbStatus("Testing database...");
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id', { count: 'exact' })
-        .limit(1);
+      const { count, error } = await supabase
+        .from('surveys')
+        .select('*', { count: 'exact', head: true });
       
       if (error) {
         setDbStatus(`DB Error: ${error.message}`);
       } else {
-        setDbStatus(`Database OK! Found ${data?.length || 0} profile(s)`);
+        setDbStatus(`Database OK! Tables connected successfully.`);
       }
     } catch (err) {
       setDbStatus(`DB Test Failed: ${err}`);

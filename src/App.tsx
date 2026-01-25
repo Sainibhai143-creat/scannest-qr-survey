@@ -45,11 +45,26 @@ const App = ({ initialState = 'survey' }: AppProps) => {
       const { data: survey, error: surveyError } = await supabase
         .from('surveys')
         .insert({
-          created_by: user.id,
-          login_name: data.name,
-          login_email: data.email,
-          login_id: data.id,
-          login_password: data.password,
+          user_id: user.id,
+          title: `Survey - ${data.fullName}`,
+          description: `Household survey for ${data.address}`,
+          status: 'completed'
+        })
+        .select()
+        .single();
+
+      if (surveyError) throw surveyError;
+
+      if (!survey) {
+        throw new Error('Failed to create survey');
+      }
+
+      // Update profile with survey data
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({
+          user_id: user.id,
+          email: data.email,
           full_name: data.fullName,
           phone_number: data.phoneNumber,
           address: data.address,
@@ -59,18 +74,16 @@ const App = ({ initialState = 'survey' }: AppProps) => {
           family_female: data.familyMembers.female,
           family_total: data.familyMembers.total,
           income_source: data.incomeSource,
-          gov_department: data.governmentJobDetails?.department,
-          gov_designation: data.governmentJobDetails?.designation,
-          gov_employee_id: data.governmentJobDetails?.employeeId,
+          govt_department: data.governmentJobDetails?.department,
+          govt_designation: data.governmentJobDetails?.designation,
+          govt_employee_id: data.governmentJobDetails?.employeeId,
           has_disability: data.hasDisability,
           disability_details: data.disabilityDetails,
           has_health_insurance: data.hasHealthInsurance,
           health_insurance_provider: data.healthInsuranceProvider
-        })
-        .select()
-        .single();
+        });
 
-      if (surveyError) throw surveyError;
+      if (profileError) throw profileError;
 
       // Save appliances data
       const { error: appliancesError } = await supabase
