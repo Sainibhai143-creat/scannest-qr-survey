@@ -33,17 +33,14 @@ const Contact = () => {
     try {
       // Save contact form submission to database
       const { error } = await supabase
-        .from('contact_submissions' as any)
-        .insert([
-          {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            subject: formData.subject,
-            message: formData.message,
-            submitted_at: new Date().toISOString()
-          }
-        ]);
+        .from('contact_submissions')
+        .insert({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message
+        });
 
       if (error) {
         throw error;
