@@ -14,7 +14,273 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      appliances: {
+        Row: {
+          ac: number | null
+          created_at: string | null
+          fans: number | null
+          geyser: number | null
+          id: string
+          lights: number | null
+          microwave: number | null
+          others: string[] | null
+          refrigerator: number | null
+          survey_id: string
+          updated_at: string | null
+          washing_machine: number | null
+        }
+        Insert: {
+          ac?: number | null
+          created_at?: string | null
+          fans?: number | null
+          geyser?: number | null
+          id?: string
+          lights?: number | null
+          microwave?: number | null
+          others?: string[] | null
+          refrigerator?: number | null
+          survey_id: string
+          updated_at?: string | null
+          washing_machine?: number | null
+        }
+        Update: {
+          ac?: number | null
+          created_at?: string | null
+          fans?: number | null
+          geyser?: number | null
+          id?: string
+          lights?: number | null
+          microwave?: number | null
+          others?: string[] | null
+          refrigerator?: number | null
+          survey_id?: string
+          updated_at?: string | null
+          washing_machine?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appliances_survey_id_fkey"
+            columns: ["survey_id"]
+            isOneToOne: false
+            referencedRelation: "surveys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contact_submissions: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          message: string
+          name: string
+          phone: string | null
+          subject: string | null
+          submitted_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          message: string
+          name: string
+          phone?: string | null
+          subject?: string | null
+          submitted_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          phone?: string | null
+          subject?: string | null
+          submitted_at?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          disability_details: string | null
+          email: string | null
+          family_female: number | null
+          family_male: number | null
+          family_total: number | null
+          full_name: string | null
+          govt_department: string | null
+          govt_designation: string | null
+          govt_employee_id: string | null
+          has_disability: boolean | null
+          has_health_insurance: boolean | null
+          health_insurance_provider: string | null
+          house_number: string | null
+          id: string
+          income_source: string | null
+          ownership: string | null
+          phone_number: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          disability_details?: string | null
+          email?: string | null
+          family_female?: number | null
+          family_male?: number | null
+          family_total?: number | null
+          full_name?: string | null
+          govt_department?: string | null
+          govt_designation?: string | null
+          govt_employee_id?: string | null
+          has_disability?: boolean | null
+          has_health_insurance?: boolean | null
+          health_insurance_provider?: string | null
+          house_number?: string | null
+          id?: string
+          income_source?: string | null
+          ownership?: string | null
+          phone_number?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          disability_details?: string | null
+          email?: string | null
+          family_female?: number | null
+          family_male?: number | null
+          family_total?: number | null
+          full_name?: string | null
+          govt_department?: string | null
+          govt_designation?: string | null
+          govt_employee_id?: string | null
+          has_disability?: boolean | null
+          has_health_insurance?: boolean | null
+          health_insurance_provider?: string | null
+          house_number?: string | null
+          id?: string
+          income_source?: string | null
+          ownership?: string | null
+          phone_number?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      qr_tokens: {
+        Row: {
+          created_at: string | null
+          expires_at: string
+          id: string
+          is_used: boolean | null
+          survey_id: string | null
+          token: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          is_used?: boolean | null
+          survey_id?: string | null
+          token: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          is_used?: boolean | null
+          survey_id?: string | null
+          token?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qr_tokens_survey_id_fkey"
+            columns: ["survey_id"]
+            isOneToOne: false
+            referencedRelation: "surveys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      surveys: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          status: string | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          status?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          status?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      vehicles: {
+        Row: {
+          created_at: string | null
+          fuel_type: string | null
+          id: string
+          model_year: number | null
+          registration_number: string | null
+          survey_id: string
+          type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          fuel_type?: string | null
+          id?: string
+          model_year?: number | null
+          registration_number?: string | null
+          survey_id: string
+          type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          fuel_type?: string | null
+          id?: string
+          model_year?: number | null
+          registration_number?: string | null
+          survey_id?: string
+          type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicles_survey_id_fkey"
+            columns: ["survey_id"]
+            isOneToOne: false
+            referencedRelation: "surveys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
