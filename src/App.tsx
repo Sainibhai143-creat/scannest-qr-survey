@@ -29,10 +29,19 @@ const App = ({ initialState = 'survey' }: AppProps) => {
 
   const handleSurveyComplete = async (data: SurveyData) => {
     try {
-      // Get current user
-      const { data: { user } } = await supabase.auth.getUser();
+      // Check for Universal Pass access first
+      const hasUniversalAccess = sessionStorage.getItem("universal_access") === "true";
       
-      if (!user) {
+      // Get current user from Supabase
+      let user = null;
+      try {
+        const { data: userData } = await supabase.auth.getUser();
+        user = userData?.user;
+      } catch (authError) {
+        console.log("Auth check failed, checking for Universal Pass");
+      }
+      
+      if (!user && !hasUniversalAccess) {
         toast({
           title: "Authentication Required",
           description: "Please login to save survey data",
@@ -41,19 +50,35 @@ const App = ({ initialState = 'survey' }: AppProps) => {
         return;
       }
 
-      // Save survey data to database
+      // If Universal Pass, save locally and show QR
+      if (hasUniversalAccess && !user) {
+        console.log("Universal Pass user - saving survey locally");
+        setSurveyData(data);
+        setCurrentState('qr-generated');
+        
+        toast({
+          title: "Survey Completed",
+          description: "Your survey has been completed successfully!"
+        });
+        return;
+      }
+
+      // Save survey data to database for authenticated Supabase users
       const { data: survey, error: surveyError } = await supabase
         .from('surveys')
         .insert({
-          user_id: user.id,
+          user_id: user!.id,
           title: `Survey - ${data.fullName}`,
           description: `Household survey for ${data.address}`,
           status: 'completed'
         })
         .select()
-        .single();
+        .maybeSingle();
 
-      if (surveyError) throw surveyError;
+      if (surveyError) {
+        console.error('Survey insert error:', surveyError);
+        throw surveyError;
+      }
 
       if (!survey) {
         throw new Error('Failed to create survey');
@@ -63,7 +88,7 @@ const App = ({ initialState = 'survey' }: AppProps) => {
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({
-          user_id: user.id,
+          user_id: user!.id,
           email: data.email,
           full_name: data.fullName,
           phone_number: data.phoneNumber,
@@ -83,7 +108,10 @@ const App = ({ initialState = 'survey' }: AppProps) => {
           health_insurance_provider: data.healthInsuranceProvider
         });
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        console.error('Profile upsert error:', profileError);
+        throw profileError;
+      }
 
       // Save appliances data
       const { error: appliancesError } = await supabase
@@ -100,7 +128,10 @@ const App = ({ initialState = 'survey' }: AppProps) => {
           others: data.appliances.others
         });
 
-      if (appliancesError) throw appliancesError;
+      if (appliancesError) {
+        console.error('Appliances insert error:', appliancesError);
+        throw appliancesError;
+      }
 
       // Save vehicles data
       if (data.vehicles && data.vehicles.length > 0) {
@@ -116,7 +147,10 @@ const App = ({ initialState = 'survey' }: AppProps) => {
             }))
           );
 
-        if (vehiclesError) throw vehiclesError;
+        if (vehiclesError) {
+          console.error('Vehicles insert error:', vehiclesError);
+          throw vehiclesError;
+        }
       }
 
       setSurveyData(data);
@@ -129,6 +163,20 @@ const App = ({ initialState = 'survey' }: AppProps) => {
 
     } catch (error: any) {
       console.error('Error saving survey:', error);
+      
+      // For Universal Pass users, still allow completing the survey
+      const hasUniversalAccess = sessionStorage.getItem("universal_access") === "true";
+      if (hasUniversalAccess) {
+        setSurveyData(data);
+        setCurrentState('qr-generated');
+        
+        toast({
+          title: "Survey Completed",
+          description: "Survey completed (saved locally with Universal Pass)"
+        });
+        return;
+      }
+      
       toast({
         title: "Error",
         description: error.message || "Failed to save survey data",
