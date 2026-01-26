@@ -11,8 +11,20 @@ interface ProtectedRouteProps {
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [hasUniversalAccess, setHasUniversalAccess] = useState(false);
+  
+  // Check if user is authenticated via either Supabase or Universal Pass
+  const isAuthenticated = user || hasUniversalAccess;
 
   useEffect(() => {
+    // Check for Universal Pass access
+    const universalAccess = sessionStorage.getItem("universal_access");
+    if (universalAccess === "true") {
+      setHasUniversalAccess(true);
+      setLoading(false);
+      return;
+    }
+    
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -43,7 +55,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     );
   }
 
-  if (!user) {
+  if (!isAuthenticated) {
     return (
       <div className="min-h-screen gradient-subtle flex items-center justify-center px-4">
         <Card className="w-full max-w-md shadow-elegant">
