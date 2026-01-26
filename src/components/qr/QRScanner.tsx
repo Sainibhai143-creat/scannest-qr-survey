@@ -93,8 +93,22 @@ export const QRScanner = ({ onScanSuccess }: QRScannerProps) => {
     if (!file) return;
 
     try {
-      const result = await QrScanner.scanImage(file);
-      const qrData = JSON.parse(result);
+      // scanImage returns either a string or ScanResult object depending on options
+      const result = await QrScanner.scanImage(file, { returnDetailedScanResult: true });
+      const scannedData = typeof result === 'string' ? result : result.data;
+      
+      console.log("Scanned QR data:", scannedData);
+      
+      // Try to parse as JSON first (for direct JSON QR codes)
+      let qrData;
+      try {
+        qrData = JSON.parse(scannedData);
+      } catch {
+        // If not JSON, the scanned data might be the raw content
+        // Pass it as-is wrapped in an object
+        qrData = { data: scannedData, raw: true };
+      }
+      
       onScanSuccess(qrData);
       toast({
         title: "QR Code Scanned",
@@ -102,11 +116,17 @@ export const QRScanner = ({ onScanSuccess }: QRScannerProps) => {
         variant: "default",
       });
     } catch (error) {
+      console.error("QR scan error:", error);
       toast({
         title: "Scan Failed",
-        description: "Could not read QR code from image.",
+        description: "Could not read QR code from image. Make sure the image is clear and contains a valid QR code.",
         variant: "destructive",
       });
+    }
+    
+    // Reset the input so the same file can be selected again
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
