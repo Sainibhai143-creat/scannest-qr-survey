@@ -11,8 +11,18 @@ const Index = () => {
   const [session, setSession] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [dbStatus, setDbStatus] = useState<string>("");
+  const [hasUniversalAccess, setHasUniversalAccess] = useState(false);
+  
+  // Check if user is authenticated via either Supabase or Universal Pass
+  const isAuthenticated = user || hasUniversalAccess;
 
   useEffect(() => {
+    // Check for Universal Pass access
+    const universalAccess = sessionStorage.getItem("universal_access");
+    if (universalAccess === "true") {
+      setHasUniversalAccess(true);
+    }
+    
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
@@ -84,7 +94,7 @@ const Index = () => {
     <div className="min-h-screen gradient-subtle">
       <div className="container mx-auto px-4 py-8">
         {/* Auth Status Bar */}
-        {user && (
+        {isAuthenticated && (
           <div className="mb-8 max-w-4xl mx-auto">
             <Card className="bg-success/5 border-success/20">
               <CardContent className="p-4">
@@ -92,7 +102,9 @@ const Index = () => {
                   <div className="flex items-center space-x-3">
                     <User className="w-5 h-5 text-success" />
                     <div>
-                      <p className="font-medium text-success">Logged in as {user.email}</p>
+                      <p className="font-medium text-success">
+                        {hasUniversalAccess ? "Logged in with Universal Pass" : `Logged in as ${user?.email}`}
+                      </p>
                       {profile && (
                         <p className="text-sm text-muted-foreground">
                           Profile created: {new Date(profile.created_at).toLocaleDateString()}
@@ -108,7 +120,14 @@ const Index = () => {
                     <Button variant="outline" size="sm" onClick={testDatabase}>
                       Test DB
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => supabase.auth.signOut()}>
+                    <Button variant="outline" size="sm" onClick={() => {
+                      if (hasUniversalAccess) {
+                        sessionStorage.removeItem("universal_access");
+                        window.location.reload();
+                      } else {
+                        supabase.auth.signOut();
+                      }
+                    }}>
                       Logout
                     </Button>
                   </div>
@@ -136,7 +155,7 @@ const Index = () => {
             Developed by Setu Developer
           </p>
           <div className="mt-4 flex items-center justify-center space-x-2">
-            {!user ? (
+            {!isAuthenticated ? (
               <Badge variant="secondary" className="bg-primary/10 text-primary">
                 Login required for access
               </Badge>
@@ -150,7 +169,7 @@ const Index = () => {
         </div>
 
         {/* Authentication Required Notice */}
-        {!user && (
+        {!isAuthenticated && (
           <div className="max-w-2xl mx-auto mb-8">
             <Card className="bg-primary/5 border-primary/20">
               <CardContent className="p-6 text-center">
@@ -168,7 +187,7 @@ const Index = () => {
         )}
 
         {/* Main Action Buttons - Only show if user is authenticated */}
-        {user && (
+        {isAuthenticated && (
           <div className="max-w-2xl mx-auto grid gap-8 md:grid-cols-2">
             {/* Scan Button */}
             <Card className="shadow-elegant hover:shadow-glow transition-all duration-300">
