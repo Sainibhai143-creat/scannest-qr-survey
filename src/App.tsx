@@ -50,15 +50,17 @@ const App = ({ initialState = 'survey' }: AppProps) => {
         return;
       }
 
-      // If Universal Pass, save locally and show QR
+      // If Universal Pass, save locally and show QR (no database access)
       if (hasUniversalAccess && !user) {
         console.log("Universal Pass user - saving survey locally");
-        setSurveyData(data);
+        // Generate a local ID for Universal Pass users
+        const localSurveyData = { ...data, id: `local-${Date.now()}` };
+        setSurveyData(localSurveyData);
         setCurrentState('qr-generated');
         
         toast({
           title: "Survey Completed",
-          description: "Your survey has been completed successfully!"
+          description: "Survey completed! Note: Dynamic QR requires Supabase login for database sync."
         });
         return;
       }
@@ -153,12 +155,14 @@ const App = ({ initialState = 'survey' }: AppProps) => {
         }
       }
 
-      setSurveyData(data);
+      // Set survey data with database ID for dynamic QR
+      const surveyDataWithId = { ...data, id: survey.id };
+      setSurveyData(surveyDataWithId);
       setCurrentState('qr-generated');
       
       toast({
         title: "Survey Saved",
-        description: "Your survey data has been successfully saved!"
+        description: "Your survey data has been saved! QR code will fetch latest data from database."
       });
 
     } catch (error: any) {
