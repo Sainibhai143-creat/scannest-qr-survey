@@ -22,12 +22,13 @@ export const QRGenerator = ({ surveyData, onContinue }: QRGeneratorProps) => {
     try {
       setIsGenerating(true);
       
-      // Create a secure data payload
+      // Create a DYNAMIC QR payload - only survey_id stored
+      // When scanned, data will be fetched from database (latest data)
       const qrPayload = {
-        id: surveyData.id,
+        type: 'scannest_dynamic',
+        survey_id: surveyData.id,
         name: surveyData.name,
         timestamp: Date.now(),
-        data: btoa(JSON.stringify(surveyData)), // Base64 encode the data
       };
 
       const qrDataUrl = await QRCode.toDataURL(JSON.stringify(qrPayload), {
@@ -97,8 +98,8 @@ export const QRGenerator = ({ surveyData, onContinue }: QRGeneratorProps) => {
                       Hello, {surveyData.name}!
                     </h3>
                     <p className="text-muted-foreground mb-4">
-                      Save this QR code to access your survey data anytime. 
-                      You'll need your ID ({surveyData.id}) and password to unlock the data.
+                      Save this QR code. When scanned, it will fetch your <strong>latest</strong> survey data from the database. 
+                      Any changes made to your data will reflect when scanning this QR.
                     </p>
                   </div>
 
