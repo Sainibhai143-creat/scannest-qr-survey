@@ -98,40 +98,40 @@ const Index = () => {
           <div className="mb-8 max-w-4xl mx-auto">
             <Card className="bg-success/5 border-success/20">
               <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <User className="w-5 h-5 text-success" />
-                    <div>
-                      <p className="font-medium text-success">
-                        {hasUniversalAccess ? "Logged in with Universal Pass" : `Logged in as ${user?.email}`}
-                      </p>
-                      {profile && (
-                        <p className="text-sm text-muted-foreground">
-                          Profile created: {new Date(profile.created_at).toLocaleDateString()}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="secondary" className="bg-success/20 text-success">
-                      <Database className="w-3 h-3 mr-1" />
-                      Connected
-                    </Badge>
-                    <Button variant="outline" size="sm" onClick={testDatabase}>
-                      Test DB
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={() => {
-                      if (hasUniversalAccess) {
-                        sessionStorage.removeItem("universal_access");
-                        window.location.reload();
-                      } else {
-                        supabase.auth.signOut();
-                      }
-                    }}>
-                      Logout
-                    </Button>
-                  </div>
-                </div>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                   <div className="flex items-center space-x-3">
+                     <User className="w-5 h-5 text-success" />
+                     <div>
+                       <p className="font-medium text-success text-sm sm:text-base">
+                         {hasUniversalAccess ? "Logged in with Universal Pass" : `Logged in as ${user?.email}`}
+                       </p>
+                       {profile && (
+                         <p className="text-xs sm:text-sm text-muted-foreground">
+                           Profile created: {new Date(profile.created_at).toLocaleDateString()}
+                         </p>
+                       )}
+                     </div>
+                   </div>
+                   <div className="flex items-center space-x-2 flex-wrap">
+                     <Badge variant="secondary" className="bg-success/20 text-success">
+                       <Database className="w-3 h-3 mr-1" />
+                       Connected
+                     </Badge>
+                     <Button variant="outline" size="sm" onClick={testDatabase}>
+                       Test DB
+                     </Button>
+                     <Button variant="outline" size="sm" onClick={() => {
+                       if (hasUniversalAccess) {
+                         sessionStorage.removeItem("universal_access");
+                         window.location.reload();
+                       } else {
+                         supabase.auth.signOut();
+                       }
+                     }}>
+                       Logout
+                     </Button>
+                   </div>
+                 </div>
                 {dbStatus && (
                   <p className="text-sm text-muted-foreground mt-2">{dbStatus}</p>
                 )}
@@ -147,7 +147,7 @@ const Index = () => {
             alt="Scannest Logo" 
             className="mx-auto mb-6 h-20 w-auto"
           />
-          <h1 className="text-4xl font-bold text-gradient mb-2">Welcome to Scannest</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-2">Welcome to Scannest</h1>
           <p className="text-lg text-muted-foreground">
             Complete household surveys and manage data with QR authentication
           </p>
