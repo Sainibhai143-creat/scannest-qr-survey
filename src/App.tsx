@@ -29,38 +29,15 @@ const App = ({ initialState = 'survey' }: AppProps) => {
 
   const handleSurveyComplete = async (data: SurveyData) => {
     try {
-      // Check for Universal Pass access first
-      const hasUniversalAccess = sessionStorage.getItem("universal_access") === "true";
-      
       // Get current user from Supabase
-      let user = null;
-      try {
-        const { data: userData } = await supabase.auth.getUser();
-        user = userData?.user;
-      } catch (authError) {
-        console.log("Auth check failed, checking for Universal Pass");
-      }
+      const { data: userData } = await supabase.auth.getUser();
+      const user = userData?.user;
       
-      if (!user && !hasUniversalAccess) {
+      if (!user) {
         toast({
           title: "Authentication Required",
           description: "Please login to save survey data",
           variant: "destructive"
-        });
-        return;
-      }
-
-      // If Universal Pass, save locally and show QR (no database access)
-      if (hasUniversalAccess && !user) {
-        console.log("Universal Pass user - saving survey locally");
-        // Generate a local ID for Universal Pass users
-        const localSurveyData = { ...data, id: `local-${Date.now()}` };
-        setSurveyData(localSurveyData);
-        setCurrentState('qr-generated');
-        
-        toast({
-          title: "Survey Completed",
-          description: "Survey completed! Note: Dynamic QR requires Supabase login for database sync."
         });
         return;
       }
@@ -167,19 +144,6 @@ const App = ({ initialState = 'survey' }: AppProps) => {
 
     } catch (error: any) {
       console.error('Error saving survey:', error);
-      
-      // For Universal Pass users, still allow completing the survey
-      const hasUniversalAccess = sessionStorage.getItem("universal_access") === "true";
-      if (hasUniversalAccess) {
-        setSurveyData(data);
-        setCurrentState('qr-generated');
-        
-        toast({
-          title: "Survey Completed",
-          description: "Survey completed (saved locally with Universal Pass)"
-        });
-        return;
-      }
       
       toast({
         title: "Error",
