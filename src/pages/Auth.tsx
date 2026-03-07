@@ -122,31 +122,10 @@ const Auth: React.FC = () => {
     }
   };
 
-  // Universal ID Pass credentials for testing/admin access
-  const UNIVERSAL_EMAIL = "ravigopiramsaini1210@gmail.com";
-  const UNIVERSAL_PASSWORD = "ravisaini";
-
   const handleLogin = async () => {
     if (!validateForm()) return;
     
     setLoading(true);
-    
-    // Check for Universal ID Pass first
-    const isUniversalPass = 
-      email.trim().toLowerCase() === UNIVERSAL_EMAIL.toLowerCase() && 
-      password === UNIVERSAL_PASSWORD;
-    
-    if (isUniversalPass) {
-      toast({
-        title: "🔐 Universal Access Granted",
-        description: "Welcome! You're logged in with Universal ID Pass.",
-      });
-      // Store universal access in sessionStorage (not localStorage for security)
-      sessionStorage.setItem("universal_access", "true");
-      navigate("/");
-      setLoading(false);
-      return;
-    }
     
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });

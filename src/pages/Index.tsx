@@ -11,18 +11,10 @@ const Index = () => {
   const [session, setSession] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [dbStatus, setDbStatus] = useState<string>("");
-  const [hasUniversalAccess, setHasUniversalAccess] = useState(false);
   
-  // Check if user is authenticated via either Supabase or Universal Pass
-  const isAuthenticated = user || hasUniversalAccess;
+  const isAuthenticated = !!user;
 
   useEffect(() => {
-    // Check for Universal Pass access
-    const universalAccess = sessionStorage.getItem("universal_access");
-    if (universalAccess === "true") {
-      setHasUniversalAccess(true);
-    }
-    
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
@@ -102,9 +94,9 @@ const Index = () => {
                    <div className="flex items-center space-x-3">
                      <User className="w-5 h-5 text-success" />
                      <div>
-                       <p className="font-medium text-success text-sm sm:text-base">
-                         {hasUniversalAccess ? "Logged in with Universal Pass" : `Logged in as ${user?.email}`}
-                       </p>
+                        <p className="font-medium text-success text-sm sm:text-base">
+                          Logged in as {user?.email}
+                        </p>
                        {profile && (
                          <p className="text-xs sm:text-sm text-muted-foreground">
                            Profile created: {new Date(profile.created_at).toLocaleDateString()}
@@ -120,14 +112,9 @@ const Index = () => {
                      <Button variant="outline" size="sm" onClick={testDatabase}>
                        Test DB
                      </Button>
-                     <Button variant="outline" size="sm" onClick={() => {
-                       if (hasUniversalAccess) {
-                         sessionStorage.removeItem("universal_access");
-                         window.location.reload();
-                       } else {
-                         supabase.auth.signOut();
-                       }
-                     }}>
+                      <Button variant="outline" size="sm" onClick={() => {
+                        supabase.auth.signOut();
+                      }}>
                        Logout
                      </Button>
                    </div>
