@@ -210,6 +210,8 @@ const Auth: React.FC = () => {
   };
 
   return (
+    <>
+    <Toaster />
     <div className="min-h-screen gradient-subtle flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         {/* Header */}
