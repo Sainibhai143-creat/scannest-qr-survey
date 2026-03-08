@@ -10,6 +10,7 @@ import { Mail, Lock, User, ArrowLeft, Shield, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import scannestLogo from "@/assets/scannest-logo.png";
+import { Toaster } from "@/components/ui/toaster";
 
 // Validation schemas
 const emailSchema = z.string().email("Please enter a valid email address");
@@ -209,6 +210,8 @@ const Auth: React.FC = () => {
   };
 
   return (
+    <>
+    <Toaster />
     <div className="min-h-screen gradient-subtle flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         {/* Header */}
@@ -402,6 +405,7 @@ const Auth: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
