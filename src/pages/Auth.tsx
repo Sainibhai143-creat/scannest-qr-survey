@@ -405,6 +405,7 @@ const Auth: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
