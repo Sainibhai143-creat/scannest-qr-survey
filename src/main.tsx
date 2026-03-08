@@ -4,18 +4,19 @@ import App from './App.tsx'
 import Index from "./pages/Index.tsx";
 import Contact from "./pages/Contact.tsx";
 import NotFound from "./pages/NotFound.tsx";
-import { QRScanner } from "./components/qr/QRScanner";
 import Auth from './pages/Auth.tsx'
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import { AdminRoute } from "./components/auth/AdminRoute";
 import './index.css'
 
-// Create wrapper components for different states
+// Survey registration - Admin only
 const SurveyApp = () => (
-  <ProtectedRoute>
+  <AdminRoute>
     <App initialState="survey" />
-  </ProtectedRoute>
+  </AdminRoute>
 );
 
+// Scanner - Any authenticated user
 const ScannerApp = () => (
   <ProtectedRoute>
     <App initialState="scanner" />

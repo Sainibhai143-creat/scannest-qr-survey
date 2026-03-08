@@ -6,6 +6,8 @@ import { ClipboardList, Scan, QrCode, Shield, UserPlus, User, Database } from "l
 import { supabase } from "@/integrations/supabase/client";
 import scannestLogo from "@/assets/scannest-logo.png";
 
+const UNIVERSAL_EMAIL = "admin@scannest.app";
+
 const Index = () => {
   const [user, setUser] = useState<any>(null);
   const [session, setSession] = useState<any>(null);
@@ -13,26 +15,21 @@ const Index = () => {
   const [dbStatus, setDbStatus] = useState<string>("");
   
   const isAuthenticated = !!user;
+  const isAdmin = user?.email === UNIVERSAL_EMAIL;
 
   useEffect(() => {
-    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        
-        // Fetch profile when user logs in
         if (session?.user) {
-          setTimeout(() => {
-            fetchProfile(session.user.id);
-          }, 0);
+          setTimeout(() => fetchProfile(session.user.id), 0);
         } else {
           setProfile(null);
         }
       }
     );
 
-    // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -97,24 +94,19 @@ const Index = () => {
                         <p className="font-medium text-success text-sm sm:text-base">
                           Logged in as {user?.email}
                         </p>
-                       {profile && (
-                         <p className="text-xs sm:text-sm text-muted-foreground">
-                           Profile created: {new Date(profile.created_at).toLocaleDateString()}
-                         </p>
-                       )}
+                        <p className="text-xs text-muted-foreground">
+                          {isAdmin ? "🔑 Admin Access — Full Control" : "👤 Normal User — Scan Only"}
+                        </p>
                      </div>
                    </div>
                    <div className="flex items-center space-x-2 flex-wrap">
-                     <Badge variant="secondary" className="bg-success/20 text-success">
-                       <Database className="w-3 h-3 mr-1" />
-                       Connected
+                     <Badge variant="secondary" className={isAdmin ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"}>
+                       {isAdmin ? <><Shield className="w-3 h-3 mr-1" />Admin</> : <><User className="w-3 h-3 mr-1" />User</>}
                      </Badge>
-                     <Button variant="outline" size="sm" onClick={testDatabase}>
-                       Test DB
-                     </Button>
-                      <Button variant="outline" size="sm" onClick={() => {
-                        supabase.auth.signOut();
-                      }}>
+                     {isAdmin && (
+                       <Button variant="outline" size="sm" onClick={testDatabase}>Test DB</Button>
+                     )}
+                      <Button variant="outline" size="sm" onClick={() => { supabase.auth.signOut(); }}>
                        Logout
                      </Button>
                    </div>
@@ -129,18 +121,12 @@ const Index = () => {
 
         {/* Header with Logo */}
         <div className="text-center mb-12 fade-in-up">
-          <img 
-            src={scannestLogo} 
-            alt="Scannest Logo" 
-            className="mx-auto mb-6 h-20 w-auto"
-          />
+          <img src={scannestLogo} alt="Scannest Logo" className="mx-auto mb-6 h-20 w-auto" />
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-2">Welcome to Scannest</h1>
           <p className="text-lg text-muted-foreground">
             Complete household surveys and manage data with QR authentication
           </p>
-          <p className="text-sm text-muted-foreground mt-1">
-            Developed by Setu Developer
-          </p>
+          <p className="text-sm text-muted-foreground mt-1">Developed by Setu Developer</p>
           <div className="mt-4 flex items-center justify-center space-x-2">
             {!isAuthenticated ? (
               <Badge variant="secondary" className="bg-primary/10 text-primary">
@@ -148,8 +134,7 @@ const Index = () => {
               </Badge>
             ) : (
               <Badge variant="secondary" className="bg-success/20 text-success">
-                <User className="w-3 h-3 mr-1" />
-                Ready to use
+                <User className="w-3 h-3 mr-1" /> Ready to use
               </Badge>
             )}
           </div>
@@ -163,7 +148,7 @@ const Index = () => {
                 <Shield className="w-12 h-12 text-primary mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-gradient mb-2">Authentication Required</h3>
                 <p className="text-muted-foreground mb-4">
-                  Please login or create an account to access survey registration and data scanning features.
+                  Please login or create an account to access QR scanning features. Admin login required for survey registration.
                 </p>
                 <Button onClick={() => window.location.href = '/auth'} size="lg">
                   Login / Sign Up to Continue
@@ -173,54 +158,48 @@ const Index = () => {
           </div>
         )}
 
-        {/* Main Action Buttons - Only show if user is authenticated */}
+        {/* Main Action Buttons */}
         {isAuthenticated && (
-          <div className="max-w-2xl mx-auto grid gap-8 md:grid-cols-2">
-            {/* Scan Button */}
+          <div className={`max-w-2xl mx-auto grid gap-8 ${isAdmin ? 'md:grid-cols-2' : 'md:grid-cols-1 max-w-md'}`}>
+            {/* Scan Button - Available to ALL authenticated users */}
             <Card className="shadow-elegant hover:shadow-glow transition-all duration-300">
               <CardHeader className="text-center">
                 <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center mb-4">
                   <Scan className="w-8 h-8 text-primary-foreground" />
                 </div>
-                <CardTitle className="text-2xl text-gradient">Scan</CardTitle>
+                <CardTitle className="text-2xl text-gradient">Scan QR</CardTitle>
                 <CardDescription>
-                  View data by entering your User ID & Password
+                  Scan QR code and view data with your credentials
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <Button 
-                  className="w-full" 
-                  variant="default"
-                  size="lg"
-                  onClick={() => window.location.href = '/scanner'}
-                >
+              <CardContent>
+                <Button className="w-full" variant="default" size="lg"
+                  onClick={() => window.location.href = '/scanner'}>
                   Go to Scan Page
                 </Button>
               </CardContent>
             </Card>
 
-            {/* Registration Button */}
-            <Card className="shadow-elegant hover:shadow-glow transition-all duration-300">
-              <CardHeader className="text-center">
-                <div className="mx-auto w-16 h-16 bg-gradient-to-br from-secondary to-secondary-light rounded-full flex items-center justify-center mb-4">
-                  <UserPlus className="w-8 h-8 text-secondary-foreground" />
-                </div>
-                <CardTitle className="text-2xl text-gradient">Registration</CardTitle>
-                <CardDescription>
-                  New users can register here with their details
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button 
-                  className="w-full" 
-                  variant="secondary"
-                  size="lg"
-                  onClick={() => window.location.href = '/survey'}
-                >
-                  Register Now
-                </Button>
-              </CardContent>
-            </Card>
+            {/* Registration Button - Only for Admin */}
+            {isAdmin && (
+              <Card className="shadow-elegant hover:shadow-glow transition-all duration-300">
+                <CardHeader className="text-center">
+                  <div className="mx-auto w-16 h-16 bg-gradient-to-br from-secondary to-secondary-light rounded-full flex items-center justify-center mb-4">
+                    <UserPlus className="w-8 h-8 text-secondary-foreground" />
+                  </div>
+                  <CardTitle className="text-2xl text-gradient">Registration</CardTitle>
+                  <CardDescription>
+                    Register new survey data (Admin only)
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button className="w-full" variant="secondary" size="lg"
+                    onClick={() => window.location.href = '/survey'}>
+                    Register Now
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
           </div>
         )}
 
@@ -234,10 +213,13 @@ const Index = () => {
               </div>
               <div className="text-center space-y-2">
                 <p className="text-muted-foreground">
-                  📲 Scan the QR code in the app to open the Login Page directly
+                  📲 Scan the QR code to view survey data
                 </p>
                 <p className="text-muted-foreground">
-                  🔑 Enter your ID & Password to view your submitted information
+                  🔑 Enter your own ID & Password <strong>OR</strong> Admin credentials to view data
+                </p>
+                <p className="text-muted-foreground">
+                  📝 Only Admin can register new surveys
                 </p>
               </div>
             </CardContent>
