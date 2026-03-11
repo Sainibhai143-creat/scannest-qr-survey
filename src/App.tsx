@@ -85,7 +85,7 @@ const App = ({ initialState = 'survey' }: AppProps) => {
           disability_details: data.disabilityDetails,
           has_health_insurance: data.hasHealthInsurance,
           health_insurance_provider: data.healthInsuranceProvider
-        });
+        }, { onConflict: 'user_id' });
 
       if (profileError) {
         console.error('Profile upsert error:', profileError);
