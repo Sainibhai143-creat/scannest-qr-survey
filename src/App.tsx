@@ -63,29 +63,47 @@ const App = ({ initialState = 'survey' }: AppProps) => {
         throw new Error('Failed to create survey');
       }
 
-      // Update profile with survey data
-      const { error: profileError } = await supabase
+      // Update profile with survey data - check if exists first
+      const profileData = {
+        user_id: user!.id,
+        email: data.email,
+        full_name: data.fullName,
+        phone_number: data.phoneNumber,
+        address: data.address,
+        house_number: data.houseNumber,
+        ownership: data.ownership,
+        family_male: data.familyMembers.male,
+        family_female: data.familyMembers.female,
+        family_total: data.familyMembers.total,
+        income_source: data.incomeSource,
+        govt_department: data.governmentJobDetails?.department,
+        govt_designation: data.governmentJobDetails?.designation,
+        govt_employee_id: data.governmentJobDetails?.employeeId,
+        has_disability: data.hasDisability,
+        disability_details: data.disabilityDetails,
+        has_health_insurance: data.hasHealthInsurance,
+        health_insurance_provider: data.healthInsuranceProvider
+      };
+
+      const { data: existingProfile } = await supabase
         .from('profiles')
-        .upsert({
-          user_id: user!.id,
-          email: data.email,
-          full_name: data.fullName,
-          phone_number: data.phoneNumber,
-          address: data.address,
-          house_number: data.houseNumber,
-          ownership: data.ownership,
-          family_male: data.familyMembers.male,
-          family_female: data.familyMembers.female,
-          family_total: data.familyMembers.total,
-          income_source: data.incomeSource,
-          govt_department: data.governmentJobDetails?.department,
-          govt_designation: data.governmentJobDetails?.designation,
-          govt_employee_id: data.governmentJobDetails?.employeeId,
-          has_disability: data.hasDisability,
-          disability_details: data.disabilityDetails,
-          has_health_insurance: data.hasHealthInsurance,
-          health_insurance_provider: data.healthInsuranceProvider
-        }, { onConflict: 'user_id' });
+        .select('id')
+        .eq('user_id', user!.id)
+        .maybeSingle();
+
+      let profileError;
+      if (existingProfile) {
+        const { error } = await supabase
+          .from('profiles')
+          .update(profileData)
+          .eq('user_id', user!.id);
+        profileError = error;
+      } else {
+        const { error } = await supabase
+          .from('profiles')
+          .insert(profileData);
+        profileError = error;
+      }
 
       if (profileError) {
         console.error('Profile upsert error:', profileError);
